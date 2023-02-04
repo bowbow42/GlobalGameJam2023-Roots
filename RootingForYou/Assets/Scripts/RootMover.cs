@@ -101,9 +101,9 @@ public class RootMover : MonoBehaviour {
                 float curMagnitude = (newPoint - _meshPoints[ ^1 ]).magnitude;
                 _curUVPos = (_curUVPos + curMagnitude) > 1 ? _curUVPos+curMagnitude-1 : _curUVPos+curMagnitude;
                 _meshPoints.Add ( _meshPoints[ ^1 ] - normal * _range );
-                _uvs.Add ( new Vector2(0.5f, _curUVPos) );
+                _uvs.Add ( new Vector2(0.0f, _curUVPos) );
                 _meshPoints.Add ( _meshPoints[ ^2 ] + normal * _range );
-                _uvs.Add ( new Vector2(0.5f, _curUVPos) );
+                _uvs.Add ( new Vector2(1.0f, _curUVPos) );
                 _meshPoints.Add ( newPoint );
                 _uvs.Add ( new Vector2(0.5f, _curUVPos) );
             } else {
@@ -114,9 +114,9 @@ public class RootMover : MonoBehaviour {
                 Vector3 normal = Vector3.right;
                 // add points
                 _meshPoints.Add(_meshPoints[^1] - normal * _range);
-                _uvs.Add(new Vector2(0.5f, _curUVPos));
+                _uvs.Add(new Vector2(0.0f, _curUVPos));
                 _meshPoints.Add(_meshPoints[^2] + normal * _range);
-                _uvs.Add(new Vector2(0.5f, _curUVPos));
+                _uvs.Add(new Vector2(1.0f, _curUVPos));
                 _meshPoints.Add ( newPoint );
                 _uvs.Add(new Vector2(0.5f, _curUVPos));
             }
