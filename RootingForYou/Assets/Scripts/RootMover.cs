@@ -21,6 +21,9 @@ public class RootMover : MonoBehaviour {
     private int _interpolationSteps = 10;
     [SerializeField]
     SproutSpawner _sprouts;
+    [SerializeField]
+    private float _sproutSpawnCooldown = 2f;
+    private float _currentSpawnCooldown = 0f;
 
     [SerializeField]
     private CameraController _camControl;
@@ -152,7 +155,13 @@ public class RootMover : MonoBehaviour {
                 //add points
                 newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
 
-                _sprouts.SpawnNewSprout(newPoint, newPoint - _meshPoints[ ^1 ]);
+                //sprout spawning and cd handling
+                if (_currentSpawnCooldown <= 0f ) {
+                    _sprouts.SpawnNewSprout(newPoint, newPoint - _meshPoints[ ^1 ]);
+                    _currentSpawnCooldown = _sproutSpawnCooldown;
+                } else {
+                    _currentSpawnCooldown -= Time.fixedDeltaTime;
+                }
 
                 float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
                 _curUVPos = ( _curUVPos + curMagnitude ) > 1 ? _curUVPos + curMagnitude - 1 : _curUVPos + curMagnitude;
