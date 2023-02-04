@@ -35,8 +35,8 @@ public class ChunkController : MonoBehaviour {
     }
 
     private void SpawnBGChunk (float yPos) {
-        GameObject go = Instantiate ( _bgChunk, transform );
-        go.transform.position = new Vector3 ( 0f, yPos, 0f );
+        //GameObject go = Instantiate ( _bgChunk, transform );
+        //go.transform.position = new Vector3 ( 0f, yPos, 0f );
         _spawnedChunks++;
         _lastSpawnedY = yPos;
     }
