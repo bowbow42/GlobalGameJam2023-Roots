@@ -182,6 +182,8 @@ public class RootMover : MonoBehaviour {
 
             _referenceTransform.position = _meshPoints[ ^1 ] + transform.position;
 
+            //set score
+            _uiControl.SetScore ( _meshFilter.mesh.triangles.Length );
 
             _energy -= _moveCost;
             _uiControl.SetEnergyBar ( _energy / _energyStartValue );

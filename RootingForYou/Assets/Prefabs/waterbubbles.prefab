@@ -97,4 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a33ccb436a1bef4d82f31904d2a1d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _waterReserve: 30
+  _waterReserve: 50
+  _waterFlow: 2
+  contactPoint: {x: 0, y: 0, z: 0}
+  _isConnectedToRoot: 0

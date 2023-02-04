@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class WaterSource : MonoBehaviour {
 
+    private float _waterReserveMax = 0f;
     public float _waterReserve = 30f;
     public float _waterFlow = 1f;
+    public Vector3 contactPoint;
+    private Vector3 _initialPosition;
+    private Vector3 _initialScale;
 
     public bool _isConnectedToRoot = false;
 
@@ -20,6 +24,17 @@ public class WaterSource : MonoBehaviour {
         //_renderer.flipY = Random.Range ( 0, 101 ) > 50;
 
         AddPolygonCollider2D ( gameObject, _renderer.sprite );
+        _waterReserveMax = _waterReserve;
+        _initialPosition = transform.position;
+        _initialScale = transform.localScale;
+    }
+
+    private void Update () {
+        if ( _isConnectedToRoot ) {
+            float percentage = _waterReserve / _waterReserveMax;
+            transform.localScale = Vector3.Lerp ( Vector3.zero, _initialScale, percentage );
+            transform.position = Vector3.Lerp (  contactPoint, _initialPosition, percentage );
+        }
     }
 
     public static void AddPolygonCollider2D ( GameObject go, Sprite sprite ) {
