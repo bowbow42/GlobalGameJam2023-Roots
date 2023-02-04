@@ -4,29 +4,40 @@ using UnityEngine;
 
 public class SingleSprout : MonoBehaviour {
     // possibilities if sprout is generated and growing (0-100)
-    public float _growPossibility;
-    public Material _rootMaterial;
+    private float _growPossibility;
+    private Material _rootMaterial;
 
-    public bool _isGrowing = false;
+    private bool _isGrowing = false;
     private bool _isFinished = false;
 
     private MeshFilter _meshFilter;
     private MeshRenderer _renderer;
 
-    public Vector3 _startPoint;
-    public Vector3 _startDirection;
+    private Vector3 _startPoint;
+    private Vector3 _startDirection;
 
     [SerializeField]
     private float _minWidth;
     [SerializeField]
     private float _maxWidth;
 
+    [SerializeField]
+    private float _sproutCooldown = 2.0f;
+    private float _currentCooldown = 0.0f;
 
     private float _curUVPos = 0.0f;
 
     private List<Vector3> _meshPoints = new List<Vector3> ();
     private List<int> _triangles = new List<int> ();
     private List<Vector2> _uvs = new List<Vector2> ();
+
+    public void initialize(float growPossibility, Vector3 direction, Vector3 curPos, bool isGrowing, Material rootMaterial) {
+        _growPossibility = growPossibility;
+        _startDirection = direction;
+        _startPoint = curPos;
+        _isGrowing = isGrowing;
+        _rootMaterial = rootMaterial;
+    }
 
     public void UpdateInput ( bool moving ) {
         if ( !moving ) {
@@ -62,9 +73,9 @@ public class SingleSprout : MonoBehaviour {
 
                 _meshPoints.Add ( _startPoint );
                 _uvs.Add ( new Vector2 ( 0.5f, 0.0f ) );
-                _meshPoints.Add ( _startPoint - normal * 0.2f );
+                _meshPoints.Add ( _startPoint - normal * _maxWidth );
                 _uvs.Add ( new Vector2 ( 0.0f, 0.0f ) );
-                _meshPoints.Add ( _startPoint + normal * 0.2f );
+                _meshPoints.Add ( _startPoint + normal * _maxWidth );
                 _uvs.Add ( new Vector2 ( 1.0f, 0.0f ) );
 
                 _curUVPos += 0.03f;
@@ -72,15 +83,18 @@ public class SingleSprout : MonoBehaviour {
                 _meshPoints.Add ( _startPoint + newDirection.normalized * 0.03f );
                 _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
             } else {
+                // todo shrink
+                float currentWidth = (_maxWidth - _minWidth) / (_meshPoints.Count / 15 < 1 ? 1 : _meshPoints.Count / 15) + _minWidth;
+
                 Vector3 newStartPoint = _meshPoints[ ^1 ];
                 Vector3 prevDirection = _meshPoints[ ^1 ] - _meshPoints[ ^4 ];
                 Vector3 prevNormal = Vector3.Cross ( Vector3.forward, prevDirection ).normalized;
                 Vector3 newDirection = Vector3.RotateTowards ( prevDirection, dirCheck ? prevNormal : prevNormal * -1, Random.Range ( 0.1f, 0.57f ), 1.0f );
                 Vector3 normal = Vector3.Cross ( Vector3.forward, newDirection ).normalized;
 
-                _meshPoints.Add ( newStartPoint - normal * 0.2f );
+                _meshPoints.Add ( newStartPoint - normal * currentWidth );
                 _uvs.Add ( new Vector2 ( 0.0f, _curUVPos ) );
-                _meshPoints.Add ( newStartPoint + normal * 0.2f );
+                _meshPoints.Add ( newStartPoint + normal * currentWidth );
                 _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
 
                 _curUVPos += 0.03f;
@@ -97,9 +111,15 @@ public class SingleSprout : MonoBehaviour {
             _meshFilter.mesh.RecalculateNormals ();
             _meshFilter.mesh.RecalculateBounds ();
 
-            if ( Random.Range ( 0f, 100f ) > _growPossibility ) {
-                _isFinished = true;
-            } 
+            //sprout growing and cd handling
+            if (_currentCooldown <= 0f ) {
+                _currentCooldown = _sproutCooldown;
+                if ( Random.Range ( 0f, 100f ) > _growPossibility ) {
+                    _isFinished = true;
+                } 
+            } else {
+                _currentCooldown -= Time.fixedDeltaTime;
+            }
         }
     }
 

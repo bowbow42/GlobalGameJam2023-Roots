@@ -32,10 +32,7 @@ public class SproutSpawner : MonoBehaviour {
     public void SpawnNewSprout ( Vector3 curPos, Vector3 direction ) {
         if ( spawnPossibility - Random.Range ( 0f, 100f ) > 0f ) {
             SingleSprout sprout = Instantiate ( _sproutPrefab.gameObject, _sprouts.transform ).GetComponent<SingleSprout>();
-            sprout._growPossibility = growPossibility;
-            sprout._startDirection = direction;
-            sprout._startPoint = curPos;
-            sprout._isGrowing = _isGrowing;
+            sprout.initialize(growPossibility, direction, curPos, _isGrowing, _rootMaterial);
         }
     }
 

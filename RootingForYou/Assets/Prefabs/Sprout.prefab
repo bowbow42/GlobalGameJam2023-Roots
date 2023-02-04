@@ -49,5 +49,5 @@ MonoBehaviour:
   _isGrowing: 0
   _startPoint: {x: 0, y: 0, z: 0}
   _startDirection: {x: 0, y: 0, z: 0}
-  _minWidth: 0.1
+  _minWidth: 0.05
   _maxWidth: 0.2
