@@ -7,7 +7,7 @@ public class RootMover : MonoBehaviour {
 
     [SerializeField]
     private float _moveSpeed = 2f;
-    [SerializeField, Range(0f,1f)]
+    [SerializeField, Range ( 0f, 1f )]
     private float _moveCost = 0.1f;
     [SerializeField]
     private float _energyStartValue;
@@ -49,6 +49,8 @@ public class RootMover : MonoBehaviour {
 
     private Transform _referenceTransform;
 
+    public List<WaterSource> listOfWaterSources = new ();
+
     // Start is called before the first frame update
     void Start () {
         _roots = transform.GetChild ( 0 ).gameObject;
@@ -88,12 +90,35 @@ public class RootMover : MonoBehaviour {
         Move ();
     }
 
+    private void Update () {
+        WaterFlow ();
+    }
+
+    private void WaterFlow () {
+        if ( listOfWaterSources.Count > 0 ) {
+            for ( int i = listOfWaterSources.Count - 1; i >= 0; i-- ) {
+                float amount = listOfWaterSources[ i ]._waterFlow * Time.deltaTime;
+                if ( listOfWaterSources[ i ]._waterReserve >= amount ) {
+                    _energy += amount;
+                    listOfWaterSources[ i ]._waterReserve -= amount;
+                } else {
+                    _energy += listOfWaterSources[ i ]._waterReserve;
+                    listOfWaterSources[ i ]._waterReserve = 0;
+                    GameObject go = listOfWaterSources[ i ].gameObject;
+                    listOfWaterSources.RemoveAt ( i );
+                    Destroy ( go );
+                }
+            }
+            _uiControl.SetEnergyBar ( _energy / _energyStartValue );
+        }
+    }
+
     private void Move () {
         if ( _isMoving ) {
             Vector3 dir = new ( _move.x, _move.y, 0f );
 
             //constraints for not leaving camera frustum
-            if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3(_move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
+            if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
                 return;
             }
             // smoothen root look so it gets small and bigger
@@ -160,7 +185,7 @@ public class RootMover : MonoBehaviour {
 
             _energy -= _moveCost;
             _uiControl.SetEnergyBar ( _energy / _energyStartValue );
-            if (_energy <= 0f ) {
+            if ( _energy <= 0f ) {
                 GameOver ();
             }
             //_isMoving = false;

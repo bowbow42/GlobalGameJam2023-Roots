@@ -19,7 +19,11 @@ public class CollisionHandling : MonoBehaviour {
 
     private void OnCollisionEnter2D ( Collision2D collision ) {
         if ( collision.collider.CompareTag ( "WaterSource" ) ) {
-            
+            WaterSource source = collision.collider.gameObject.GetComponent<WaterSource> ();
+            if ( !source._isConnectedToRoot ) {
+                _rootMover.listOfWaterSources.Add ( source );
+                source._isConnectedToRoot = true;
+            }
         }
     }
 }

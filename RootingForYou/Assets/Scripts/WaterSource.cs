@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class WaterSource : MonoBehaviour {
 
-    public float _waterReserve = 30;
+    public float _waterReserve = 30f;
+    public float _waterFlow = 1f;
+
+    public bool _isConnectedToRoot = false;
 
     private SpriteRenderer _renderer;
 
