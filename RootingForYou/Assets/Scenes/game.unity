@@ -179,7 +179,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
     m_ActionId: b8974d60-403d-4cd0-9636-50e4adf27a70
     m_ActionName: RootControl/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
@@ -216,9 +216,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 1
-  _widthVariationMin: 0.3
-  _widthVariationMax: 0.3
+  _widthVariationMin: 0.1
+  _widthVariationMax: 0.4
   _rootMaterial: {fileID: 2100000, guid: 42d8d6d5d5fd3eb4d87d04d7d35e0466, type: 2}
+  _interpolationSteps: 30
 --- !u!1 &205049540
 GameObject:
   m_ObjectHideFlags: 0
