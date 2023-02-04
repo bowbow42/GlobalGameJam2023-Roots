@@ -26,12 +26,7 @@ public class SproutSpawner : MonoBehaviour
 
     void Start()
     {
-        _sprouts = transform.GetChild ( 0 ).gameObject;
-    }
-
-    void Update()
-    {
-        
+        _sprouts = transform.GetChild ( 2 ).gameObject;
     }
 
     public void SpawnNewSprout(Vector3 curPos, Vector3 direction)
@@ -47,6 +42,7 @@ public class SproutSpawner : MonoBehaviour
             child.GetComponent<SingleSprout>()._startDirection = direction;
             child.GetComponent<SingleSprout>()._startPoint = curPos;
             child.GetComponent<SingleSprout>()._isGrowing = _isGrowing;
+            child.transform.position = new Vector3(0.0f, 1.4f, 0.0f);
             child.transform.parent = _sprouts.transform;
         }
     }

@@ -19,6 +19,8 @@ public class RootMover : MonoBehaviour {
     private Material _rootMaterial;
     [SerializeField]
     private int _interpolationSteps = 10;
+    [SerializeField]
+    SproutSpawner _sprouts;
 
     [SerializeField]
     private CameraController _camControl;
@@ -83,6 +85,7 @@ public class RootMover : MonoBehaviour {
             _move = context.ReadValue<Vector2> ();
             _isMoving = true;
         }
+        _sprouts.UpdateInput(_isMoving);
     }
 
     // Update is called once per frame
@@ -148,6 +151,8 @@ public class RootMover : MonoBehaviour {
                 Vector3 normal = Vector3.Cross ( Vector3.forward, _meshPoints[ ^1 ] - _meshPoints[ ^4 ] ).normalized;
                 //add points
                 newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
+
+                _sprouts.SpawnNewSprout(newPoint, newPoint - _meshPoints[ ^1 ]);
 
                 float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
                 _curUVPos = ( _curUVPos + curMagnitude ) > 1 ? _curUVPos + curMagnitude - 1 : _curUVPos + curMagnitude;

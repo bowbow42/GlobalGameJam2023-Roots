@@ -72,7 +72,7 @@ public class SingleSprout : MonoBehaviour
                 Vector3 newStartPoint = _meshPoints[^1];
                 Vector3 prevDirection = _meshPoints[^1] - _meshPoints[^4];
                 Vector3 prevNormal = Vector3.Cross( Vector3.forward, prevDirection).normalized;
-                Vector3 newDirection = Vector3.RotateTowards(prevDirection, dirCheck ? prevNormal : prevNormal*-1, Random.Range(0.1f,0.5f), 1.0f);
+                Vector3 newDirection = Vector3.RotateTowards(prevDirection, dirCheck ? prevNormal : prevNormal*-1, Random.Range(0.1f,0.57f), 1.0f);
                 Vector3 normal = Vector3.Cross( Vector3.forward, newDirection).normalized;
 
                 _meshPoints.Add(newStartPoint - normal * 0.2f);
