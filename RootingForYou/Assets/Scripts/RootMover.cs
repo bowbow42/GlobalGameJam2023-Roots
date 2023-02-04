@@ -16,6 +16,9 @@ public class RootMover : MonoBehaviour {
     [SerializeField]
     private int _interpolationSteps = 10;
 
+    [SerializeField]
+    SproutSpawner _sprouts;
+
     private Vector2 _move = Vector2.zero;
     private bool _isMoving = false;
 
@@ -35,7 +38,7 @@ public class RootMover : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start () {
-        _roots = transform.GetChild ( 0 ).gameObject;
+        _roots = transform.GetChild ( 1 ).gameObject;
         _meshFilter = _roots.AddComponent<MeshFilter> ();
         _meshFilter.mesh = new Mesh ();
 
@@ -61,6 +64,8 @@ public class RootMover : MonoBehaviour {
             _move = context.ReadValue<Vector2> ();
             _isMoving = true;
         }
+
+        _sprouts.UpdateInput(_isMoving);
     }
 
     // Update is called once per frame
@@ -99,6 +104,9 @@ public class RootMover : MonoBehaviour {
                 //add points
                 newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
                 float curMagnitude = (newPoint - _meshPoints[ ^1 ]).magnitude;
+
+                _sprouts.SpawnNewSprout(newPoint, newPoint - _meshPoints[ ^1 ]);
+
                 _curUVPos = (_curUVPos + curMagnitude) > 1 ? _curUVPos+curMagnitude-1 : _curUVPos+curMagnitude;
                 _meshPoints.Add ( _meshPoints[ ^1 ] - normal * _range );
                 _uvs.Add ( new Vector2(0.0f, _curUVPos) );
