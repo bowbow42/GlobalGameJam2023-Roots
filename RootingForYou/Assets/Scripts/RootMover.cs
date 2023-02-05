@@ -56,6 +56,8 @@ public class RootMover : MonoBehaviour {
 
     public List<WaterSource> listOfWaterSources = new ();
 
+    public static List<Vector3> _rootPoints = new List<Vector3>();
+
     // Start is called before the first frame update
     void Start () {
         _roots = transform.GetChild ( 0 ).gameObject;
@@ -75,6 +77,8 @@ public class RootMover : MonoBehaviour {
         _uvs.Add ( new Vector2 ( 1.0f, 0.0f ) );
         _meshPoints.Add ( transform.position );
         _uvs.Add ( new Vector2 ( 0.5f, 0.0f ) );
+
+        _rootPoints.Add(transform.position);
 
         _energy = _energyStartValue;
     }
@@ -184,6 +188,8 @@ public class RootMover : MonoBehaviour {
                 _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
                 _meshPoints.Add ( newPoint );
                 _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
+
+                _rootPoints.Add( newPoint );
             } else {
                 newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
                 float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
@@ -197,6 +203,8 @@ public class RootMover : MonoBehaviour {
                 _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
                 _meshPoints.Add ( newPoint );
                 _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
+
+                _rootPoints.Add( newPoint );
             }
 
             _triangles.AddRange ( BaseTraingulation ( _meshPoints.Count - 4 ) );
