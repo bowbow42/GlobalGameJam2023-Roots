@@ -56,10 +56,11 @@ public class RootMover : MonoBehaviour {
 
     public List<WaterSource> listOfWaterSources = new ();
 
-    public static List<Vector3> _rootPoints = new List<Vector3>();
+    public static List<Vector3> _rootPoints = new List<Vector3> ();
 
     // Start is called before the first frame update
     void Start () {
+        _rootPoints.Clear ();
         _roots = transform.GetChild ( 0 ).gameObject;
         _referenceTransform = transform.GetChild ( 1 );
 
@@ -78,7 +79,7 @@ public class RootMover : MonoBehaviour {
         _meshPoints.Add ( transform.position );
         _uvs.Add ( new Vector2 ( 0.5f, 0.0f ) );
 
-        _rootPoints.Add(transform.position);
+        _rootPoints.Add ( transform.position );
 
         _energy = _energyStartValue;
     }
@@ -92,7 +93,7 @@ public class RootMover : MonoBehaviour {
             _move = context.ReadValue<Vector2> ();
             _isMoving = true;
         }
-        _sprouts.UpdateInput(_isMoving);
+        _sprouts.UpdateInput ( _isMoving );
     }
 
     // Update is called once per frame
@@ -124,114 +125,117 @@ public class RootMover : MonoBehaviour {
     }
 
     private void Move () {
-        if ( _isMoving ) {
-            Vector3 dir = new ( _move.x, _move.y, 0f );
+        if ( !_isMoving ) {
+            return;
+        }
+        Vector3 dir = new ( _move.x, _move.y, 0f );
 
-            //constraints for not leaving camera frustum
-            if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
+        //constraints for not leaving camera frustum
+        if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
+            return;
+        }
+
+        // ignore collission when root makes u turn
+        if ( _meshPoints.Count > 4 && Vector3.Angle ( dir, _meshPoints[ ^1 ] - _meshPoints[ ^4 ] ) < 140 ) {
+            //constraints for hitten obstacles
+            RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ] + transform.position, _move, 4f );
+            if ( hit.collider != null && hit.collider.CompareTag ( "Obstacle" ) ) {
+                Debug.DrawLine ( _meshPoints[ ^1 ] + transform.position, _meshPoints[ ^1 ] + transform.position + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) );
                 return;
             }
-
-            // ignore collission when root makes u turn
-            if(_meshPoints.Count > 4 && Vector3.Angle(dir, _meshPoints[ ^1 ] - _meshPoints[ ^4 ]) < 140){
-                //constraints for hitten obstacles
-                RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ] + transform.position, _move, 4f );
-                if ( hit.collider != null && hit.collider.CompareTag("Obstacle")) {
-                    Debug.DrawLine(_meshPoints[ ^1 ] + transform.position, _meshPoints[ ^1 ] + transform.position + new Vector3 ( _move.x, _move.y * 0.5f, 0f ));
-                    return;
-                }
-            }
-
-            // smoothen root look so it gets small and bigger
-            float _range = Random.Range ( _widthVariationMin, _widthVariationMax );
-            if ( _curInterpolationStep == 0 ) {
-                _startingInterpolationWidth = _endingInterpolationWidth;
-                _endingInterpolationWidth = Random.Range ( _widthVariationMin, _widthVariationMax );
-
-                _range = _startingInterpolationWidth;
-            }
-            _range = Mathf.Lerp ( _startingInterpolationWidth, _endingInterpolationWidth, _curInterpolationStep / _interpolationSteps );
-            _curInterpolationStep++;
-            if ( _curInterpolationStep == _interpolationSteps ) {
-                _curInterpolationStep = 0;
-            }
-
-            // create root
-            Vector3 newPoint;
-            if ( _meshPoints.Count > 3 ) {
-                // make rotation smoother
-                Vector3 prevDir = ( _meshPoints[ ^1 ] - _meshPoints[ ^4 ] );
-                if(!(Vector3.Angle ( dir, prevDir ) > 140 || Vector3.Angle ( dir, prevDir ) < -140)){
-                    if ( Vector3.Angle ( dir, prevDir ) > 5 ) {
-                        dir = Vector3.RotateTowards ( prevDir, dir, 0.09f, 1.0f );
-                    }
-                }
-
-                //calculate normal
-                Vector3 normal = Vector3.Cross ( Vector3.forward, _meshPoints[ ^1 ] - _meshPoints[ ^4 ] ).normalized;
-                //add points
-                newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
-
-                //sprout spawning and cd handling
-                if (_currentSpawnCooldown <= 0f ) {
-                    _sprouts.SpawnNewSprout(newPoint, newPoint - _meshPoints[ ^1 ]);
-                    _currentSpawnCooldown = _sproutSpawnCooldown;
-                } else {
-                    _currentSpawnCooldown -= Time.fixedDeltaTime;
-                }
-
-                float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
-                _curUVPos = ( _curUVPos + curMagnitude ) > 1 ? _curUVPos + curMagnitude - 1 : _curUVPos + curMagnitude;
-                _meshPoints.Add ( _meshPoints[ ^1 ] - normal * _range );
-                _uvs.Add ( new Vector2 ( 0.0f, _curUVPos ) );
-                _meshPoints.Add ( _meshPoints[ ^2 ] + normal * _range );
-                _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
-                _meshPoints.Add ( newPoint );
-                _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
-
-                _rootPoints.Add( newPoint );
-            } else {
-                newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
-                float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
-                _curUVPos = ( _curUVPos + curMagnitude ) > 1 ? _curUVPos + curMagnitude - 1 : _curUVPos + curMagnitude;
-                //generate fake normal
-                Vector3 normal = Vector3.right;
-                // add points
-                _meshPoints.Add ( _meshPoints[ ^1 ] - normal * _range );
-                _uvs.Add ( new Vector2 ( 0.0f, _curUVPos ) );
-                _meshPoints.Add ( _meshPoints[ ^2 ] + normal * _range );
-                _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
-                _meshPoints.Add ( newPoint );
-                _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
-
-                _rootPoints.Add( newPoint );
-            }
-
-            _triangles.AddRange ( BaseTraingulation ( _meshPoints.Count - 4 ) );
-
-            _meshFilter.mesh.vertices = _meshPoints.ToArray ();
-            _meshFilter.mesh.triangles = _triangles.ToArray ();
-            _meshFilter.mesh.uv = _uvs.ToArray ();
-            _meshFilter.mesh.RecalculateNormals ();
-            _meshFilter.mesh.RecalculateBounds ();
-
-            _referenceTransform.position = _meshPoints[ ^1 ] + transform.position;
-
-            //set score
-            _uiControl.SetScore ( _meshFilter.mesh.triangles.Length );
-
-            _energy -= _moveCost;
-            _uiControl.SetEnergyBar ( _energy / _energyStartValue );
-            if ( _energy <= 0f ) {
-                GameOver ();
-            }
-            //_isMoving = false;
         }
+
+        // smoothen root look so it gets small and bigger
+        float _range = Random.Range ( _widthVariationMin, _widthVariationMax );
+        if ( _curInterpolationStep == 0 ) {
+            _startingInterpolationWidth = _endingInterpolationWidth;
+            _endingInterpolationWidth = Random.Range ( _widthVariationMin, _widthVariationMax );
+
+            _range = _startingInterpolationWidth;
+        }
+        _range = Mathf.Lerp ( _startingInterpolationWidth, _endingInterpolationWidth, _curInterpolationStep / _interpolationSteps );
+        _curInterpolationStep++;
+        if ( _curInterpolationStep == _interpolationSteps ) {
+            _curInterpolationStep = 0;
+        }
+
+        // create root
+        Vector3 newPoint;
+        if ( _meshPoints.Count > 3 ) {
+            // make rotation smoother
+            Vector3 prevDir = ( _meshPoints[ ^1 ] - _meshPoints[ ^4 ] );
+            if ( !( Vector3.Angle ( dir, prevDir ) > 140 || Vector3.Angle ( dir, prevDir ) < -140 ) ) {
+                if ( Vector3.Angle ( dir, prevDir ) > 5 ) {
+                    dir = Vector3.RotateTowards ( prevDir, dir, 0.09f, 1.0f );
+                }
+            }
+
+            //calculate normal
+            Vector3 normal = Vector3.Cross ( Vector3.forward, _meshPoints[ ^1 ] - _meshPoints[ ^4 ] ).normalized;
+            //add points
+            newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
+
+            //sprout spawning and cd handling
+            if ( _currentSpawnCooldown <= 0f ) {
+                _sprouts.SpawnNewSprout ( newPoint, newPoint - _meshPoints[ ^1 ] );
+                _currentSpawnCooldown = _sproutSpawnCooldown;
+            } else {
+                _currentSpawnCooldown -= Time.fixedDeltaTime;
+            }
+
+            float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
+            _curUVPos = ( _curUVPos + curMagnitude ) > 1 ? _curUVPos + curMagnitude - 1 : _curUVPos + curMagnitude;
+            _meshPoints.Add ( _meshPoints[ ^1 ] - normal * _range );
+            _uvs.Add ( new Vector2 ( 0.0f, _curUVPos ) );
+            _meshPoints.Add ( _meshPoints[ ^2 ] + normal * _range );
+            _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
+            _meshPoints.Add ( newPoint );
+            _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
+
+            _rootPoints.Add ( newPoint );
+        } else {
+            newPoint = _meshPoints[ ^1 ] + _moveSpeed * Time.fixedDeltaTime * dir;
+            float curMagnitude = ( newPoint - _meshPoints[ ^1 ] ).magnitude;
+            _curUVPos = ( _curUVPos + curMagnitude ) > 1 ? _curUVPos + curMagnitude - 1 : _curUVPos + curMagnitude;
+            //generate fake normal
+            Vector3 normal = Vector3.right;
+            // add points
+            _meshPoints.Add ( _meshPoints[ ^1 ] - normal * _range );
+            _uvs.Add ( new Vector2 ( 0.0f, _curUVPos ) );
+            _meshPoints.Add ( _meshPoints[ ^2 ] + normal * _range );
+            _uvs.Add ( new Vector2 ( 1.0f, _curUVPos ) );
+            _meshPoints.Add ( newPoint );
+            _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
+
+            _rootPoints.Add ( newPoint );
+        }
+
+        _triangles.AddRange ( BaseTraingulation ( _meshPoints.Count - 4 ) );
+
+        _meshFilter.mesh.vertices = _meshPoints.ToArray ();
+        _meshFilter.mesh.triangles = _triangles.ToArray ();
+        _meshFilter.mesh.uv = _uvs.ToArray ();
+        _meshFilter.mesh.RecalculateNormals ();
+        _meshFilter.mesh.RecalculateBounds ();
+
+        _referenceTransform.position = _meshPoints[ ^1 ] + transform.position;
+
+        //set score
+        _uiControl.SetScore ( _meshFilter.mesh.triangles.Length );
+
+        _energy -= _moveCost;
+        _uiControl.SetEnergyBar ( _energy / _energyStartValue );
+        if ( _energy <= 0f ) {
+            GameOver ();
+        }
+        //_isMoving = false;
+
     }
 
     private void GameOver () {
         _uiControl.ToggleGameOver ( true );
-        gameObject.SetActive ( false );
+        //gameObject.SetActive ( false );
+        UnityEngine.SceneManagement.SceneManager.LoadScene ( 1 );
     }
 
     private int[] BaseTraingulation ( int baseInt ) {
