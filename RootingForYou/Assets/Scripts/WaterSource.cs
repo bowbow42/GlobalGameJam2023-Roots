@@ -17,7 +17,7 @@ public class WaterSource : MonoBehaviour {
 
     private void Start () {
         float randomAngel = Random.Range(0f, 90f);
-        transform.rotation = Quaternion.Euler ( new Vector3 ( 0f, 0f, randomAngel ) );
+        //transform.rotation = Quaternion.Euler ( new Vector3 ( 0f, 0f, randomAngel ) );
 
         _renderer = GetComponent<SpriteRenderer> ();
         //_renderer.flipX = Random.Range ( 0, 101 ) > 50;
