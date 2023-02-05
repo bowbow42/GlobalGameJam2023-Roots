@@ -127,6 +127,12 @@ public class RootMover : MonoBehaviour {
             if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
                 return;
             }
+            //constraints for hitten obstacles
+            RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ], _move, 0.25f );
+            if ( hit.collider != null && hit.collider.CompareTag("Obstacle") ) {
+                return;
+            }
+
             // smoothen root look so it gets small and bigger
             float _range = Random.Range ( _widthVariationMin, _widthVariationMax );
             if ( _curInterpolationStep == 0 ) {
