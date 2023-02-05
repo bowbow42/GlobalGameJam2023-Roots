@@ -21,39 +21,39 @@ public class ChunkController : MonoBehaviour {
 
     private int _spawnedChunks = 0;
     private float _lastSpawnedY = 0;
-    private const float ChunkVerticalSize = 9.92f;
-    private const float ChunkVerticalHalfSize = 4.96f;
+    private const float ChunkVerticalSize = 10.24f;
+    private const float Offset = 0f;
 
     // Start is called before the first frame update
     void Start () {
-        SpawnBGChunk ( 1.1f );
-        for ( int i = 0; i < Random.Range ( _minNumberOfObstaclesPerChunk, _maxNumberOfObstaclesPerChunk + 1 ); i++ ) {
-            if ( _obstaclePrefab.Count == 0 ) {
-                return;
-            }
-            GameObject go = Instantiate ( _obstaclePrefab[ Random.Range ( 0, _obstaclePrefab.Count ) ], transform );
-            go.transform.position = new Vector3 ( Random.Range ( -8f, 8f ), Random.Range ( 0f, -ChunkVerticalSize ), 0f );
-        }
+        SpawnBGChunk ( Offset, false );
+        SpawnBGChunk ( _lastSpawnedY - ChunkVerticalSize );
     }
 
     // Update is called once per frame
     void Update () {
-        if ( _referenceTransform.position.y < 1.1f - ChunkVerticalSize * _spawnedChunks + ChunkVerticalHalfSize ) {
+        if ( _referenceTransform.position.y < 1.1f - ChunkVerticalSize * _spawnedChunks ) {
             SpawnBGChunk ( _lastSpawnedY - ChunkVerticalSize );
-            for ( int i = 0; i < Random.Range ( 1, _maxNumberOfWaterSourcePerChunk + 1 ); i++ ) {
-                SpawnWaterSource ( _lastSpawnedY - ChunkVerticalSize );
-            }
-            for ( int i = 0; i < Random.Range ( 1, _maxNumberOfObstaclesPerChunk + 1 ); i++ ) {
-                SpawnObstacle ( _lastSpawnedY - ChunkVerticalSize );
-            }
         }
     }
 
-    private void SpawnBGChunk ( float yPos ) {
-        //GameObject go = Instantiate ( _bgChunk, transform );
-        //go.transform.position = new Vector3 ( 0f, yPos, 0f );
+    private void SpawnBGChunk ( float yPos, bool spawnWater = true ) {
+        GameObject go = Instantiate ( _bgChunk, transform );
+        go.transform.position = new Vector3 ( 0f, yPos, 0f );
         _spawnedChunks++;
         _lastSpawnedY = yPos;
+
+        //watersources
+        if ( spawnWater ) {
+            for ( int i = 0; i < Random.Range ( 1, _maxNumberOfWaterSourcePerChunk + Offset ); i++ ) {
+                SpawnWaterSource ( _lastSpawnedY - ChunkVerticalSize );
+            }
+        }
+
+        //obstacles
+        for ( int i = 0; i < Random.Range ( 1, _maxNumberOfObstaclesPerChunk + Offset ); i++ ) {
+            SpawnObstacle ( _lastSpawnedY - ChunkVerticalSize );
+        }
     }
 
     private void SpawnWaterSource ( float yPosOfChunk ) {

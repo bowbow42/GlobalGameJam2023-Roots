@@ -123,6 +123,63 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &64056933
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 884100324}
+    m_Modifications:
+    - target: {fileID: 1740292422300947677, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_Name
+      value: Chunk
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 569254401fd10144cb366585f5247a7a, type: 3}
 --- !u!1 &128014150
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,10 +981,16 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 946048506}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &946048506 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8939770081115740039, guid: 569254401fd10144cb366585f5247a7a, type: 3}
+  m_PrefabInstance: {fileID: 64056933}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1024657097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,7 +1335,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7901191921928043759, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
       propertyPath: spawnPossibility
-      value: 50
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8402868555246304602, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
       propertyPath: _uiControl
@@ -1282,6 +1345,10 @@ PrefabInstance:
       propertyPath: _camControl
       value: 
       objectReference: {fileID: 205049544}
+    - target: {fileID: 8402868555246304602, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
+      propertyPath: _sproutSpawnCooldown
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8402868555246304603, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
       propertyPath: m_RootOrder
       value: 1

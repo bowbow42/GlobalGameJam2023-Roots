@@ -258,6 +258,7 @@ MonoBehaviour:
   _rootMaterial: {fileID: 2100000, guid: 42d8d6d5d5fd3eb4d87d04d7d35e0466, type: 2}
   _interpolationSteps: 30
   _sprouts: {fileID: 7901191921928043759}
+  _sproutSpawnCooldown: 2
   _camControl: {fileID: 0}
   _uiControl: {fileID: 0}
   listOfWaterSources: []
@@ -276,3 +277,4 @@ MonoBehaviour:
   spawnPossibility: 10
   growPossibility: 70
   _rootMaterial: {fileID: 2100000, guid: 42d8d6d5d5fd3eb4d87d04d7d35e0466, type: 2}
+  _sproutPrefab: {fileID: 0}

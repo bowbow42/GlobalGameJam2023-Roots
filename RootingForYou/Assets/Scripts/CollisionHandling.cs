@@ -11,12 +11,6 @@ public class CollisionHandling : MonoBehaviour {
         _rootMover = transform.parent.gameObject.GetComponent<RootMover> ();
     }
 
-    // Update is called once per frame
-    void Update () {
-
-    }
-
-
     private void OnCollisionEnter2D ( Collision2D collision ) {
         if ( collision.collider.CompareTag ( "WaterSource" ) ) {
             WaterSource source = collision.collider.gameObject.GetComponent<WaterSource> ();

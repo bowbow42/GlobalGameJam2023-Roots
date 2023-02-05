@@ -128,7 +128,7 @@ public class RootMover : MonoBehaviour {
                 return;
             }
             //constraints for hitten obstacles
-            RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ] + transform.position, _move, 0.2f );
+            RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ] + transform.position, _move, 4f );
             if ( hit.collider != null && hit.collider.CompareTag("Obstacle") ) {
                 return;
             }
