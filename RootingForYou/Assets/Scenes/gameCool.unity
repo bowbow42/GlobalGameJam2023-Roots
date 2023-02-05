@@ -1338,6 +1338,14 @@ PrefabInstance:
       value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8402868555246304602, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
+      propertyPath: _moveCost
+      value: 0.151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8402868555246304602, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
+      propertyPath: _moveSpeed
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8402868555246304602, guid: 2a8399e19ab0dc54692b46663e6fbe77, type: 3}
       propertyPath: _uiControl
       value: 
       objectReference: {fileID: 883419581}

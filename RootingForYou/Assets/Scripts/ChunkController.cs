@@ -22,6 +22,7 @@ public class ChunkController : MonoBehaviour {
     private int _spawnedChunks = 0;
     private float _lastSpawnedY = 0;
     private const float ChunkVerticalSize = 10.24f;
+    private const float ChunkVerticalHalfSize = 5.12f;
     private const float Offset = 0f;
 
     // Start is called before the first frame update
@@ -32,7 +33,7 @@ public class ChunkController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if ( _referenceTransform.position.y < 1.1f - ChunkVerticalSize * _spawnedChunks ) {
+        if ( _referenceTransform.position.y < 1.1f - ChunkVerticalSize * _spawnedChunks + ChunkVerticalHalfSize ) {
             SpawnBGChunk ( _lastSpawnedY - ChunkVerticalSize );
         }
     }
