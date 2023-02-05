@@ -17,6 +17,7 @@ public class CollisionHandling : MonoBehaviour {
             if ( !source._isConnectedToRoot ) {
                 _rootMover.listOfWaterSources.Add ( source );
                 source._isConnectedToRoot = true;
+                source.PlaySounds ();
                 source.contactPoint = new Vector3(collision.GetContact ( 0 ).point.x, collision.GetContact ( 0 ).point.y, 0f);
             }
         }

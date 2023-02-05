@@ -29,6 +29,8 @@ public class RootMover : MonoBehaviour {
     private CameraController _camControl;
     [SerializeField]
     private UiController _uiControl;
+    [SerializeField]
+    private AudioSource _audio;
 
     private float _energy;
 
@@ -88,6 +90,7 @@ public class RootMover : MonoBehaviour {
         if ( context.canceled ) {
             _move = Vector2.zero;
             _isMoving = false;
+            _audio.Stop ();
         }
         if ( context.performed ) {
             _move = context.ReadValue<Vector2> ();
@@ -133,6 +136,10 @@ public class RootMover : MonoBehaviour {
         //constraints for not leaving camera frustum
         if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
             return;
+        }
+        //start audio if not already started
+        if ( !_audio.isPlaying ) {
+            _audio.Play ();
         }
 
         // ignore collission when root makes u turn

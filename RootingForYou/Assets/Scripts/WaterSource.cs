@@ -48,4 +48,8 @@ public class WaterSource : MonoBehaviour {
             polygon.SetPath ( i, points );
         }
     }
+
+    public void PlaySounds () {
+        GetComponent<AudioSource> ().Play ();
+    }
 }
