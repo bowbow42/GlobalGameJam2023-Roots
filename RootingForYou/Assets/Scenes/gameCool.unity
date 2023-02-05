@@ -807,7 +807,7 @@ MonoBehaviour:
   _bgChunk: {fileID: 1740292422300947677, guid: 569254401fd10144cb366585f5247a7a, type: 3}
   _waterSource: {fileID: 2916614919782176310, guid: 2e36f2cb15b090f43a3d0452eecb78cc, type: 3}
   _maxNumberOfWaterSourcePerChunk: 3
-  _maxNumberOfObstaclesPerChunk: 8
+  _maxNumberOfObstaclesPerChunk: 9
   _minNumberOfObstaclesPerChunk: 5
   _obstaclePrefab:
   - {fileID: 8547300116083917875, guid: 053aceea0ab47744ea7a54b1344c6285, type: 3}

@@ -59,10 +59,12 @@ public class RootMover : MonoBehaviour {
     public List<WaterSource> listOfWaterSources = new ();
 
     public static List<Vector3> _rootPoints = new List<Vector3> ();
+    public static int score;
 
     // Start is called before the first frame update
     void Start () {
         _rootPoints.Clear ();
+        score = 0;
         _roots = transform.GetChild ( 0 ).gameObject;
         _referenceTransform = transform.GetChild ( 1 );
 
@@ -241,7 +243,13 @@ public class RootMover : MonoBehaviour {
 
     private void GameOver () {
         _uiControl.ToggleGameOver ( true );
+        score = _meshFilter.mesh.triangles.Length;
         //gameObject.SetActive ( false );
+        Invoke ( nameof(FuckingChangeScene), 1f );
+        
+    }
+
+    private void FuckingChangeScene () {
         UnityEngine.SceneManagement.SceneManager.LoadScene ( 1 );
     }
 
