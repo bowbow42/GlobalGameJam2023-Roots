@@ -127,10 +127,15 @@ public class RootMover : MonoBehaviour {
             if ( !_camControl.IsInFrustum ( _meshPoints[ ^1 ] + new Vector3 ( _move.x, _move.y * 0.5f, 0f ) + transform.position ) ) {
                 return;
             }
-            //constraints for hitten obstacles
-            RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ] + transform.position, _move, 4f );
-            if ( hit.collider != null && hit.collider.CompareTag("Obstacle") ) {
-                return;
+
+            // ignore collission when root makes u turn
+            if(_meshPoints.Count > 4 && Vector3.Angle(dir, _meshPoints[ ^1 ] - _meshPoints[ ^4 ]) < 140){
+                //constraints for hitten obstacles
+                RaycastHit2D hit = Physics2D.Raycast ( _meshPoints[ ^1 ] + transform.position, _move, 4f );
+                if ( hit.collider != null && hit.collider.CompareTag("Obstacle")) {
+                    Debug.DrawLine(_meshPoints[ ^1 ] + transform.position, _meshPoints[ ^1 ] + transform.position + new Vector3 ( _move.x, _move.y * 0.5f, 0f ));
+                    return;
+                }
             }
 
             // smoothen root look so it gets small and bigger
@@ -152,8 +157,10 @@ public class RootMover : MonoBehaviour {
             if ( _meshPoints.Count > 3 ) {
                 // make rotation smoother
                 Vector3 prevDir = ( _meshPoints[ ^1 ] - _meshPoints[ ^4 ] );
-                if ( Vector3.Angle ( dir, prevDir ) > 5 ) {
-                    dir = Vector3.RotateTowards ( prevDir, dir, 0.09f, 1.0f );
+                if(!(Vector3.Angle ( dir, prevDir ) > 140 || Vector3.Angle ( dir, prevDir ) < -140)){
+                    if ( Vector3.Angle ( dir, prevDir ) > 5 ) {
+                        dir = Vector3.RotateTowards ( prevDir, dir, 0.09f, 1.0f );
+                    }
                 }
 
                 //calculate normal

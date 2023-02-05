@@ -83,7 +83,6 @@ public class SingleSprout : MonoBehaviour {
                 _meshPoints.Add ( _startPoint + newDirection.normalized * 0.03f );
                 _uvs.Add ( new Vector2 ( 0.5f, _curUVPos ) );
             } else {
-                // todo shrink
                 float currentWidth = (_maxWidth - _minWidth) / (_meshPoints.Count / 15 < 1 ? 1 : _meshPoints.Count / 15) + _minWidth;
 
                 Vector3 newStartPoint = _meshPoints[ ^1 ];
